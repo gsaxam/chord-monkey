@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 30,
     fontWeight: 'bold',
-    color: '#35d381'
+    color: '#35d381',
+    fontFamily: 'aclonica'
   }
 });

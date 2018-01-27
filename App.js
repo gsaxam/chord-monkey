@@ -10,7 +10,9 @@ export default class App extends React.Component {
   }
   async componentWillMount() {
     await Expo.Font.loadAsync({
-      lobster: require("./assets/fonts/Lobster/Lobster-Regular.ttf")
+      lobster: require("./assets/fonts/Lobster/Lobster-Regular.ttf"),
+      aclonica: require("./assets/fonts/Aclonica/Aclonica-Regular.ttf"),
+      tangerine: require("./assets/fonts/Tangerine/Tangerine-Regular.ttf")
     });
     this.setState({ loading: false });
   }
@@ -36,13 +38,13 @@ export default class App extends React.Component {
               {key: 'O Rey Piya', value: 'Am D F G'},
             ]}
             renderItem={({item}) =>
-            <View style={styles.item}>
-              <View style={styles.row_cell_timeplace}>
+            <View style={styles.listItem}>
+              <View style={styles.row_cell_chord_songTitle}>
                 <View style={styles.row_only}>
-                {item.value.split(" ").map(chord => <Text style={styles.row_time}>{chord}</Text>)}
+                {item.value.split(" ").map(chord => <Text style={styles.row_chord}>{chord}</Text>)}
                 </View>
                 <View Style={styles.lineBreak} />
-                <Text style={styles.row_place}>{item.key}</Text>
+                <Text style={styles.row_song_title}>{item.key}</Text>
               </View>
             </View>}
             />
@@ -59,7 +61,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'column'
   },
-  item: {
+  listItem: {
     flex: 1,
     elevation: 1,
     borderRadius: 2,
@@ -76,11 +78,11 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginBottom: 6
   },
-  row_cell_timeplace: {
+  row_cell_chord_songTitle: {
       flex: 1,
       flexDirection: 'column'
         },
-  row_time: {
+  row_chord: {
     color: 'black',
     includeFontPadding: false,
     flex: 0,
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#3598dc',
     overflow: 'hidden'
   },
-  row_place: {
+  row_song_title: {
     color: '#353535c7',
     textAlignVertical: 'top',
     includeFontPadding: false,
