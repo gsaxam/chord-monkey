@@ -1,9 +1,23 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
 import Home from './home';
+import { Font } from 'expo';
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { loading: true };
+  }
+  async componentWillMount() {
+    await Expo.Font.loadAsync({
+      lobster: require("./assets/fonts/Lobster/Lobster-Regular.ttf")
+    });
+    this.setState({ loading: false });
+  }
   render() {
+    if (this.state.loading) {
+      return <Expo.AppLoading />;
+    }
     return (
       <View style={styles.container}>
       {/** <SvgUri width="200" height="200" source={require('./homer-simpson.svg')} /> */}
@@ -60,12 +74,12 @@ const styles = StyleSheet.create({
     marginLeft: 14,
     marginRight: 14,
     marginTop: 0,
-    marginBottom: 6,
+    marginBottom: 6
   },
   row_cell_timeplace: {
       flex: 1,
-      flexDirection: 'column',
-    },
+      flexDirection: 'column'
+        },
   row_time: {
     color: 'black',
     includeFontPadding: false,
@@ -88,6 +102,7 @@ const styles = StyleSheet.create({
     includeFontPadding: false,
     flex: 0,
     fontSize: 30,
+    fontFamily:'lobster'
   },
   row_only:{
     flexDirection: 'row'
