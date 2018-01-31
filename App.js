@@ -25,12 +25,6 @@ class HomeScreen extends React.Component {
           />
           <View style={styles.spacer} />
           <Text style={styles.titleText}>Chord Monkey</Text>
-          <Button
-            onPress={() => navigate("New")}
-            title="SAVE"
-            color="#841584"
-            accessibilityLabel="Learn more about this purple button"
-          />
         </View>
         <View style={styles.lineBreak} />
         <FlatList
@@ -78,13 +72,28 @@ class HomeScreen extends React.Component {
             </View>
           )}
         />
+        <TouchableHighlight
+          style={styles.addNewButton}
+          onPress={() => navigate("New")}
+        >
+          <Text style={styles.addNewButtonLabel}> + </Text>
+        </TouchableHighlight>
       </View>
     );
   }
 }
 
 class NewScreen extends React.Component {
-  saveFormData() {}
+  constructor(props) {
+    super(props);
+    this.state = { songTitle: null, chord: null, strumPattern: null };
+  }
+
+  saveFormData = () => {
+    console.log(this.state.songTitle);
+    () => navigate("Home");
+  }
+
   render() {
     const { navigate } = this.props.navigation;
     return (
@@ -96,39 +105,46 @@ class NewScreen extends React.Component {
           />
           <View style={styles.spacer} />
           <Text style={styles.titleText}>Chord Monkey</Text>
-          <Button
-            onPress={() => navigate("Home")}
-            title="Done"
-            color="#841584"
-            accessibilityLabel="Learn more about this purple button"
-          />
         </View>
         <View style={{ padding: 20, flex: 1 }}>
           <View style={styles.row_cell_chord_songTitle}>
             <Text style={styles.new_input_label}> Song Title </Text>
             <TextInput
               style={styles.new_input_field}
-              onChangeText={text => this.setState({ text })}
-              value={this.saveFormData()}
+              onChangeText={text => this.setState({ songTitle: text })}
+              value={this.state.songTitle}
             />
             <Text style={styles.new_input_label}> Chords </Text>
             <TextInput
               style={styles.new_input_field}
-              onChangeText={text => this.setState({ text })}
-              value={this.saveFormData()}
+              onChangeText={text => this.setState({ chord: text })}
+              value={this.state.chord}
             />
 
             <Text style={styles.new_input_label}> Strumming Pattern </Text>
             <TextInput
               style={styles.new_input_field}
-              onChangeText={text => this.setState({ text })}
-              value={this.saveFormData()}
+              onChangeText={text => this.setState({ strumPattern: text })}
+              value={this.state.strumPattern}
             />
-
-            <TouchableHighlight style={styles.saveButton}>
-
-              <Text style={styles.buttonText}><FontAwesome>{Icons.heart}</FontAwesome> Save</Text>
-            </TouchableHighlight>
+            <View style={styles.row_only}>
+              <TouchableHighlight
+                style={styles.cancelButton}
+                onPress={() => navigate("Home")}
+              >
+                <Text style={styles.buttonText}>
+                  <FontAwesome>{Icons.timesCircle}</FontAwesome> Cancel
+                </Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                style={styles.saveButton}
+                onPress={this.saveFormData()}
+              >
+                <Text style={styles.buttonText}>
+                  <FontAwesome>{Icons.heart}</FontAwesome> Save
+                </Text>
+              </TouchableHighlight>
+            </View>
           </View>
         </View>
       </View>
@@ -252,8 +268,7 @@ const styles = StyleSheet.create({
   row_only_bottom: {
     marginTop: 70,
     paddingBottom: 10,
-    flexDirection: "row",
-    textAlign: "right"
+    flexDirection: "row"
   },
   new_input_field: {
     height: 80,
@@ -262,7 +277,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontSize: 30,
     color: "#ee3450",
-    backgroundColor: "#0e1e31",
+    backgroundColor: "#0e2739",
     paddingLeft: 20,
     paddingTop: 10,
     paddingBottom: 10,
@@ -280,18 +295,44 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: "#2b2db1",
     borderRadius: 10,
     padding: 10,
-    color: "#fff",
-    backgroundColor: "#006d96",
+    backgroundColor: "#01d1b2",
     marginTop: 30,
-    alignItems: "center"
+    alignItems: "center",
+    marginRight: 20
+  },
+  cancelButton: {
+    flex: 1,
+    borderRadius: 10,
+    padding: 10,
+    backgroundColor: "#fa6854",
+    marginTop: 30,
+    alignItems: "center",
+    marginRight: 20
   },
   buttonText: {
     fontSize: 30,
     fontFamily: "lobster",
-    paddingLeft: 10
+    paddingLeft: 10,
+    color: "#fff"
+  },
+  addNewButton: {
+    width: 70,
+    height: 70,
+    borderRadius: 50,
+    borderWidth: 5,
+    borderColor: "#07132f",
+    backgroundColor: "#ee3450",
+    position: "absolute",
+    bottom: 10,
+    right: 10,
+    overflow: "hidden"
+  },
+  addNewButtonLabel: {
+    fontSize: 45,
+    fontWeight: "bold",
+    color: "#fff",
+    paddingLeft: 5
   }
 });
