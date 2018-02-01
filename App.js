@@ -7,11 +7,13 @@ import {
   FlatList,
   Button,
   TouchableHighlight,
-  TextInput
+  TextInput,
+  AsyncStorage
 } from "react-native";
 import FontAwesome, { Icons } from "react-native-fontawesome";
 import { Font } from "expo";
 import { StackNavigator } from "react-navigation";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 class HomeScreen extends React.Component {
   render() {
@@ -47,11 +49,11 @@ class HomeScreen extends React.Component {
             <View style={styles.listItem}>
               <View style={styles.row_cell_chord_songTitle}>
                 <View style={styles.row_only}>
-                  {item.value
-                    .split(" ")
-                    .map((chord, i) => (
-                      <Text style={styles.row_chord} key={i}>{chord}</Text>
-                    ))}
+                  {item.value.split(" ").map((chord, i) => (
+                    <Text style={styles.row_chord} key={i}>
+                      {chord}
+                    </Text>
+                  ))}
                 </View>
                 <View Style={styles.lineBreak} />
                 <Text style={styles.row_song_title}>{item.key}</Text>
@@ -87,11 +89,43 @@ class NewScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = { songTitle: null, chord: null, strumPattern: null };
+
+    AsyncStorage.getItem("lessons", res => {
+      this.setState({
+        lessons: res
+      });
+      console.log(res)
+    });
   }
 
   saveFormData = () => {
-    console.log(this.state.songTitle);
-    () => navigate("Home");
+    console.log(this.state);
+    // Get the data
+    let songTitle = this.state.songTitle;
+    let chord = this.state.chord;
+    let strumPattern = this.state.strumPattern;
+
+    // Retrieve the existing messages
+    AsyncStorage.getItem("lessons", res => {
+      var lessons;
+      // If this is the first time, set up a new array
+      if (res === null) {
+        lessons = [];
+      } else {
+        lessons = JSON.parse(res);
+      }
+      // Add the new message
+      lessons.push({
+        songTitle: songTitle,
+        chord: chord,
+        strumPattern: strumPattern
+      });
+
+      // Save the messages
+      AsyncStorage.setItem("lessons", JSON.stringify(lessons), res => {
+        this.navigate("Home");
+      });
+    });
   };
 
   render() {
@@ -106,48 +140,50 @@ class NewScreen extends React.Component {
           <View style={styles.spacer} />
           <Text style={styles.titleText}>Chord Monkey</Text>
         </View>
-        <View style={{ padding: 20, flex: 1 }}>
-          <View style={styles.row_cell_chord_songTitle}>
-            <Text style={styles.new_input_label}> Song Title </Text>
-            <TextInput
-              style={styles.new_input_field}
-              onChangeText={text => this.setState({ songTitle: text })}
-              value={this.state.songTitle}
-            />
-            <Text style={styles.new_input_label}> Chords </Text>
-            <TextInput
-              style={styles.new_input_field}
-              onChangeText={text => this.setState({ chord: text })}
-              value={this.state.chord}
-            />
+        <KeyboardAwareScrollView>
+          <View style={{ padding: 20, flex: 1 }}>
+            <View style={styles.row_cell_chord_songTitle}>
+              <Text style={styles.new_input_label}> Song Title </Text>
+              <TextInput
+                style={styles.new_input_field}
+                onChangeText={text => this.setState({ songTitle: text })}
+                value={this.state.songTitle}
+              />
+              <Text style={styles.new_input_label}> Chords </Text>
+              <TextInput
+                style={styles.new_input_field}
+                onChangeText={text => this.setState({ chord: text })}
+                value={this.state.chord}
+              />
 
-            <Text style={styles.new_input_label}> Strumming Pattern </Text>
-            <TextInput
-              style={styles.new_input_field}
-              onChangeText={text => this.setState({ strumPattern: text })}
-              value={this.state.strumPattern}
-            />
-          </View>
+              <Text style={styles.new_input_label}> Strumming Pattern </Text>
+              <TextInput
+                style={styles.new_input_field}
+                onChangeText={text => this.setState({ strumPattern: text })}
+                value={this.state.strumPattern}
+              />
+            </View>
 
-          <View style={styles.row_only}>
-            <TouchableHighlight
-              style={styles.cancelButton}
-              onPress={() => navigate("Home")}
-            >
-              <Text style={styles.buttonText}>
-                <FontAwesome>{Icons.timesCircle}</FontAwesome> Cancel
-              </Text>
-            </TouchableHighlight>
-            <TouchableHighlight
-              style={styles.saveButton}
-              onPress={this.saveFormData}
-            >
-              <Text style={styles.buttonText}>
-                <FontAwesome>{Icons.heart}</FontAwesome> Save
-              </Text>
-            </TouchableHighlight>
+            <View style={styles.row_only}>
+              <TouchableHighlight
+                style={styles.cancelButton}
+                onPress={() => navigate("Home")}
+              >
+                <Text style={styles.buttonText}>
+                  <FontAwesome>{Icons.timesCircle}</FontAwesome> Cancel
+                </Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                style={styles.saveButton}
+                onPress={this.saveFormData}
+              >
+                <Text style={styles.buttonText}>
+                  <FontAwesome>{Icons.heart}</FontAwesome> Save
+                </Text>
+              </TouchableHighlight>
+            </View>
           </View>
-        </View>
+        </KeyboardAwareScrollView>
       </View>
     );
   }
