@@ -49,16 +49,16 @@ class HomeScreen extends React.Component {
                 <View style={styles.row_only}>
                   {item.value
                     .split(" ")
-                    .map(chord => (
-                      <Text style={styles.row_chord}>{chord}</Text>
+                    .map((chord, i) => (
+                      <Text style={styles.row_chord} key={i}>{chord}</Text>
                     ))}
                 </View>
                 <View Style={styles.lineBreak} />
                 <Text style={styles.row_song_title}>{item.key}</Text>
               </View>
               <View style={styles.row_only_bottom}>
-                {item.strum.split("").map(strum => (
-                  <Text style={styles.row_strum}>
+                {item.strum.split("").map((strum, i) => (
+                  <Text style={styles.row_strum} key={i}>
                     {strum == "U" ? (
                       <FontAwesome>{Icons.arrowUp}</FontAwesome>
                     ) : null}
@@ -92,7 +92,7 @@ class NewScreen extends React.Component {
   saveFormData = () => {
     console.log(this.state.songTitle);
     () => navigate("Home");
-  }
+  };
 
   render() {
     const { navigate } = this.props.navigation;
@@ -127,24 +127,25 @@ class NewScreen extends React.Component {
               onChangeText={text => this.setState({ strumPattern: text })}
               value={this.state.strumPattern}
             />
-            <View style={styles.row_only}>
-              <TouchableHighlight
-                style={styles.cancelButton}
-                onPress={() => navigate("Home")}
-              >
-                <Text style={styles.buttonText}>
-                  <FontAwesome>{Icons.timesCircle}</FontAwesome> Cancel
-                </Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={styles.saveButton}
-                onPress={this.saveFormData()}
-              >
-                <Text style={styles.buttonText}>
-                  <FontAwesome>{Icons.heart}</FontAwesome> Save
-                </Text>
-              </TouchableHighlight>
-            </View>
+          </View>
+
+          <View style={styles.row_only}>
+            <TouchableHighlight
+              style={styles.cancelButton}
+              onPress={() => navigate("Home")}
+            >
+              <Text style={styles.buttonText}>
+                <FontAwesome>{Icons.timesCircle}</FontAwesome> Cancel
+              </Text>
+            </TouchableHighlight>
+            <TouchableHighlight
+              style={styles.saveButton}
+              onPress={this.saveFormData}
+            >
+              <Text style={styles.buttonText}>
+                <FontAwesome>{Icons.heart}</FontAwesome> Save
+              </Text>
+            </TouchableHighlight>
           </View>
         </View>
       </View>
